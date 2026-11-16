@@ -1,64 +1,33 @@
-
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Button, Col, Container, Form, Row } from 'react-bootstrap';
-import { mockLoads } from '../../shared/data/mockLoads';
+import { useAppDispatch, useAppSelector } from '../../app/store';
+import { getElectricCarLoads, setFilters, resetFilters as resetFiltersAction } from '../../entities/electric-car-load/model/state';
+import LoadStatus from '../../widgets/load-card/LoadStatus';
+import { Link } from 'react-router-dom';
 import LoadCard from '../../widgets/load-card/LoadCard';
-
 export default function TilePage() {
-  const [search, setSearch] = useState('');
-  const [category, setCategory] = useState('');
-  const [maxPower, setMaxPower] = useState('');
-
-  useEffect(() => {
-    document.title = 'Плитка электрических нагрузок';
-  }, []);
-
-  const categories = Array.from(
-    new Set(mockLoads.map((load) => load.category)),
-  );
-
-  const filteredLoads = mockLoads.filter((load) => {
-    const matchesName = load.name
-      .toLowerCase()
-      .includes(search.toLowerCase());
-
-    const matchesCategory =
-      category === '' || load.category === category;
-
-    const matchesPower =
-      maxPower === '' || load.power_draw_w <= Number(maxPower);
-
-    return matchesName && matchesCategory && matchesPower;
-  });
-
-  function resetFilters() {
-    setSearch('');
-    setCategory('');
-    setMaxPower('');
-  }
-
-  return (
-    <Container className="page-container py-4">
+    const dispatch = useAppDispatch();
+    const { search, category, maxPower } = useAppSelector(s => s.filters);
+    const authenticated = useAppSelector(s => s.auth.isAuthenticated);
+    const { items: filteredLoads, pending } = useAppSelector(s => s.electricCarLoads);
+    useEffect(() => { document.title = 'Плитка электрических нагрузок'; dispatch(getElectricCarLoads()); }, [dispatch, authenticated]);
+    const categories = Array.from(new Set(['Отопление', 'Обзорность', 'Терморегулирование батареи', ...filteredLoads.map(x => x.category), category])).filter(Boolean);
+    function resetFilters() { dispatch(resetFiltersAction()); dispatch(getElectricCarLoads()); }
+    return (<Container className="page-container py-4">
       <h1>Плитка электрических нагрузок</h1>
 
       <p className="text-secondary">
         Просмотр и фильтрация систем электромобиля для зимней эксплуатации
       </p>
 
-      <Form className="filter-panel p-3 mb-4">
+      <LoadStatus /><Form className="filter-panel p-3 mb-4" onSubmit={e => { e.preventDefault(); dispatch(getElectricCarLoads()); }}>
         <Row className="g-3">
           <Col xs={12} md={4}>
             <Form.Label htmlFor="load-search">
               Поиск по названию
             </Form.Label>
 
-            <Form.Control
-              id="load-search"
-              type="text"
-              placeholder="Например, обогреватель"
-              value={search}
-              onChange={(event) => setSearch(event.target.value)}
-            />
+            <Form.Control id="load-search" type="text" placeholder="Например, обогреватель" value={search} onChange={(event) => dispatch(setFilters({ search: event.target.value }))}/>
           </Col>
 
           <Col xs={12} md={4}>
@@ -66,18 +35,12 @@ export default function TilePage() {
               Категория
             </Form.Label>
 
-            <Form.Select
-              id="load-category"
-              value={category}
-              onChange={(event) => setCategory(event.target.value)}
-            >
+            <Form.Select id="load-category" value={category} onChange={(event) => dispatch(setFilters({ category: event.target.value }))}>
               <option value="">Все категории</option>
 
-              {categories.map((item) => (
-                <option key={item} value={item}>
+              {categories.map((item) => (<option key={item} value={item}>
                   {item}
-                </option>
-              ))}
+                </option>))}
             </Form.Select>
           </Col>
 
@@ -86,14 +49,7 @@ export default function TilePage() {
               Максимальная мощность, Вт
             </Form.Label>
 
-            <Form.Control
-              id="load-max-power"
-              type="number"
-              min="0"
-              placeholder="Например, 500"
-              value={maxPower}
-              onChange={(event) => setMaxPower(event.target.value)}
-            />
+            <Form.Control id="load-max-power" type="number" min="0" max="10000" placeholder="Например, 500" value={maxPower} onChange={(event) => dispatch(setFilters({ maxPower: event.target.value }))}/>
           </Col>
         </Row>
 
@@ -102,29 +58,19 @@ export default function TilePage() {
             Найдено нагрузок: <strong>{filteredLoads.length}</strong>
           </span>
 
-          <Button
-            variant="outline-secondary"
-            type="button"
-            onClick={resetFilters}
-          >
+          <Button type="submit" disabled={pending > 0}>Найти</Button>
+          <Button disabled={pending > 0} variant="outline-secondary" type="button" onClick={resetFilters}>
             Сбросить фильтры
           </Button>
         </div>
       </Form>
 
-      {filteredLoads.length > 0 ? (
-        <Row className="g-4">
-          {filteredLoads.map((load) => (
-            <Col key={load.id} xs={12} md={6} lg={4}>
-              <LoadCard load={load} />
-            </Col>
-          ))}
-        </Row>
-      ) : (
-        <p className="text-secondary">
+      {filteredLoads.length > 0 ? (<Row className="g-4">
+          {filteredLoads.map((load) => (<Col key={load.id} xs={12} md={6} lg={4}>
+              <LoadCard load={load}/><Link to={`/?id=${load.id}`} className="btn btn-link">Открыть в ленте</Link>
+            </Col>))}
+        </Row>) : (<p className="text-secondary">
           По заданным условиям нагрузки не найдены.
-        </p>
-      )}
-    </Container>
-  );
+        </p>)}
+    </Container>);
 }
