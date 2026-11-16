@@ -1,0 +1,286 @@
+/* Adapted from backend resources/styles/main.css, final FEED — TIKTOK STYLE block.
+   Scope all rules to the feed so the shared tile cards and navbar keep their styles. */
+.feed-screen .feed-page {
+    position: relative;
+    height: min(772px, calc(100svh - 76px));
+    min-height: 460px;
+    overflow: hidden;
+    isolation: isolate;
+    background: #0a0a0b;
+}
+
+.feed-screen .feed-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    background: #0a0a0b;
+}
+
+.feed-screen .feed-gradient {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: linear-gradient(to bottom, rgb(0 0 0 / 5%) 20%, rgb(0 0 0 / 12%) 45%, rgb(0 0 0 / 88%) 100%);
+}
+
+.feed-screen .feed-thumbnail {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    width: 72px;
+    height: 72px;
+    object-fit: cover;
+    border-radius: 16px;
+    border: 1px solid rgb(255 255 255 / 25%);
+    box-shadow: 0 8px 20px rgb(0 0 0 / 25%);
+    z-index: 5;
+}
+
+.feed-screen .feed-content {
+    position: absolute;
+    left: 20px;
+    right: 100px;
+    bottom: 64px;
+    z-index: 20;
+    max-height: calc(100% - 180px);
+    overflow-y: auto;
+    overflow-wrap: anywhere;
+    color: #fff;
+    scrollbar-width: thin;
+}
+
+.feed-screen .category-badge {
+    display: inline-flex;
+    margin: 0 0 8px;
+    padding: 5px 9px;
+    border-radius: 7px;
+    background: #5f49f3;
+    color: #fff;
+    font-size: 9px;
+    line-height: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.feed-screen .feed-title {
+    margin: 0 0 7px;
+    color: #fff;
+    font-size: 26px;
+    line-height: 30px;
+    font-weight: 700;
+    text-shadow: 0 2px 8px rgb(0 0 0 / 75%);
+}
+
+.feed-screen .feed-description {
+    color: rgb(255 255 255 / 92%);
+    font-size: 13px;
+    line-height: 18px;
+}
+
+.feed-screen .description-text {
+    display: -webkit-box;
+    margin: 0;
+    overflow: hidden;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.feed-screen .description-text.is-expanded { display: block; }
+
+.feed-screen .description-toggle-label {
+    display: inline-block;
+    margin-top: 2px;
+    padding: 0;
+    border: 0;
+    color: #3e83f9;
+    background: transparent;
+    font: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.feed-screen .feed-like {
+    position: absolute;
+    right: 14px;
+    bottom: 292px;
+    z-index: 40;
+    width: 58px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    color: #fff;
+}
+
+.feed-screen .feed-heart {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    padding: 0;
+    border: 0;
+    color: #fff;
+    background: transparent;
+    font-family: Arial, sans-serif;
+    font-size: 38px;
+    line-height: 1;
+    text-decoration: none;
+    text-shadow: 0 2px 7px rgb(0 0 0 / 90%);
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.feed-screen .feed-heart.is-liked,
+.feed-screen .feed-heart:hover { color: #ff2d55; }
+.feed-screen .feed-heart:not(:disabled):hover { transform: scale(1.08); }
+
+.feed-screen .feed-like > span {
+    font-size: 12px;
+    line-height: 16px;
+    font-weight: 700;
+    text-shadow: 0 2px 5px rgb(0 0 0 / 90%);
+}
+
+.feed-screen .feed-metrics {
+    position: absolute;
+    right: 14px;
+    bottom: 88px;
+    z-index: 40;
+    width: 76px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 22px;
+}
+
+.feed-screen .feed-metric {
+    width: 76px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.feed-screen .metric-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    margin-bottom: 5px;
+    border: 1px solid rgb(255 255 255 / 22%);
+    border-radius: 50%;
+    background: rgb(0 0 0 / 42%);
+    box-shadow: 0 3px 10px rgb(0 0 0 / 35%);
+    backdrop-filter: blur(7px);
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.feed-screen .metric-label {
+    margin-bottom: 3px;
+    color: rgb(255 255 255 / 90%);
+    font-size: 8px;
+    line-height: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.feed-screen .metric-value,
+.feed-screen .metric-priority {
+    margin: 0;
+    color: #fff;
+    font-size: 16px;
+    line-height: 19px;
+    font-weight: 700;
+    white-space: nowrap;
+    text-shadow: 0 1px 5px rgb(0 0 0 / 85%);
+}
+
+.feed-screen .metric-priority { font-size: 14px; }
+
+.feed-screen .next-link,
+.feed-screen .feed-restart,
+.feed-screen .feed-playback,
+.feed-screen .feed-delete {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 10px;
+    border: 1px solid rgb(255 255 255 / 35%);
+    border-radius: 10px;
+    color: #fff;
+    background: rgb(255 255 255 / 12%);
+    backdrop-filter: blur(8px);
+    font: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.feed-screen .next-link,
+.feed-screen .feed-restart {
+    position: absolute;
+    bottom: 14px;
+    z-index: 30;
+    min-height: 38px;
+}
+
+.feed-screen .next-link { right: 16px; width: 74px; }
+.feed-screen .feed-restart { left: 20px; }
+.feed-screen .next-arrow { margin-left: 6px; }
+.feed-screen .feed-delete { margin-top: 8px; }
+.feed-screen .feed-playback { position: absolute; top: 24px; left: 20px; z-index: 5; width: 40px; height: 40px; }
+
+.feed-screen button:disabled { opacity: 0.5; cursor: default; }
+.feed-screen button:focus-visible,
+.feed-screen a:focus-visible { outline: 3px solid #8ec5ff; outline-offset: 3px; }
+
+.feed-screen .feed-media-error {
+    position: absolute;
+    top: 110px;
+    left: 20px;
+    right: 20px;
+    z-index: 4;
+    padding: 8px 10px;
+    border-radius: 8px;
+    color: #fff;
+    background: rgb(0 0 0 / 70%);
+    font-size: 12px;
+}
+
+.feed-screen .feed-heart-burst {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    z-index: 45;
+    color: #ff2d55;
+    font-size: 100px;
+    line-height: 1;
+    pointer-events: none;
+    text-shadow: 0 4px 20px rgb(0 0 0 / 40%);
+    animation: feed-heart-pop 700ms ease-out both;
+}
+
+@keyframes feed-heart-pop {
+    0% { opacity: 0; transform: translate(-50%, -50%) scale(0.3) rotate(-15deg); }
+    30% { opacity: 1; transform: translate(-50%, -50%) scale(1.2) rotate(8deg); }
+    60% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    100% { opacity: 0; transform: translate(-50%, -90%) scale(1.35); }
+}
+
+@media (max-width: 359px) {
+    .feed-screen .feed-content { left: 14px; right: 96px; }
+    .feed-screen .feed-title { font-size: 23px; line-height: 27px; }
+    .feed-screen .feed-description { font-size: 12px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .feed-screen .feed-heart { transition: none; }
+    .feed-screen .feed-heart-burst { animation: feed-heart-pop 1ms both; }
+}
